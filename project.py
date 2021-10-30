@@ -33,7 +33,7 @@ app.layout = html.Div(children=[
             html.Div([
                 html.H3('Average Wage/hour'),
                 html.H3('50$')], 
-                style={'background-color':'#b4c3db', 'width': '400px', 'textAlign': 'center'}
+                style={'background-color':'#b4c3db', 'display':'inline-block', 'margin':'auto'}
                 ),
             html.Div([
                 html.H3('Average male wage/hour', style=big_number_style),
