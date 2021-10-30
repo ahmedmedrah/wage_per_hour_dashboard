@@ -33,7 +33,7 @@ app.layout = html.Div(children=[
             html.Div([
                 html.H3('Average Wage/hour'),
                 html.H3(f'{round(df["wage_per_hour"].mean(), 2)} USD')], 
-                style={'display':'inline-block'},
+                style={'display':'inline-block','width':'30%'},
                 className='four.columns'
                 ),
             html.Div([
