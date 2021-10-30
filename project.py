@@ -9,8 +9,8 @@ import numpy as np
 # Load data
 df = pd.read_csv('wph.csv')
 df = df.drop(index = df[df.wage_per_hour == 44.5].index)
-df.female = df.female.map({0:'male',1:'female'})
-df['union'] = df['union'].map({0:'not',1:'union'})
+df.female = df.female.map({0:'Male', 1:'Female'})
+df['union'] = df['union'].map({0:'Not in union', 1:'In union'})
 df = df.rename(columns={'female':'gender'})
 a = []
 for i in df[['manufacturing','construction']].values:
@@ -22,46 +22,47 @@ for i in df[['manufacturing','construction']].values:
         a.append('other')
 df['field'] = a
 
-
-
-# Graph
-# education_wage = px.scatter(
-#     data_frame=df, x='education_yrs', y='wage_per_hour', title='Education vs Wage per hour') 
-#     # color='education_yrs', color_continuous_scale='bluered')
-
-# age_wage = px.scatter(
-#     data_frame=df, x='age', y='wage_per_hour', title='Age vs Wage per hour')
-#     # color='age', color_continuous_scale='bluered')
-
-# exp_wage = px.scatter(
-#     data_frame=df, x='experience_yrs', y='wage_per_hour', title='Experience years vs Wage per hour')
-#     # color='experience_yrs', color_continuous_scale='bluered')
-
-# gender_box = px.box(data_frame=df, x='gender', y='wage_per_hour', title='Gender vs Wage per hour',
-#             color_discrete_map={'male':'#3295a8','female':'#cf6975'},color='gender')
+big_number_style = {'display': 'inline-block', 'padding':'10px 5px 5px 15px', "margin":'0px 100px'}
 
 # Layout HTML/Dash
 app = dash.Dash()
 app.layout = html.Div(children=[
     html.Div(children=[
+        html.H1('Exploring Wage per Hour Dataset', style={'textAlign': 'center', 'background-color':' olivedrab'}),
+        html.Div(children=[
+            html.Div([
+                html.H3('Average Wage/hour in USD'),
+                html.H3('50')], 
+                style={'background-color':'#b4c3db', 'width': '400px', 'textAlign': 'center'}
+                ),
+            html.Div([
+                html.H3('Average Wage/hour in USD Males', style=big_number_style),
+                html.H3('50', style={'textAlign': 'left'})],  
+                style={'display':'inline-block'}
+                ),
+            html.Div([
+                html.H3('Average Wage/hour in USD Females', style=big_number_style),
+                html.H3('50', style={'textAlign': 'left'})], 
+                style={'display':'inline-block'}
+                )
+            ]),
         dcc.Dropdown(
             id='gender_dd',
-            options=[{'label':c, 'value':c} for c in df.gender.unique()],
+            options=[{'label':'Male', 'value':'Male'}, {'label':'Female', 'value':'Female'}, {'label':'Both', 'value':'Both'}],
             style={'width':'200px', 'display':'inline-block','margin':'10px'},
-            placeholder='gender',
-
+            placeholder='Pick gender',
         ),
         dcc.Dropdown(
             id='field_dd',
             options=[{'label':c,'value':c} for c in df.field.unique()],
             style={'width':'200px', 'display':'inline-block','margin':'10px'},
-            placeholder='field of work',
+            placeholder='Pick field of work',
         ),
         dcc.Dropdown(
             id='union_dd',
             options=[{'label':c,'value':c} for c in df.union.unique()],
             style={'width':'200px', 'display':'inline-block','margin':'10px'},
-            placeholder='union',
+            placeholder='In union?',
         )
     ]),    
     html.Div(children=[
@@ -82,10 +83,15 @@ callback_inputs =  [
 
 def return_df_copy(gender, field, union):
     df_copy = df.copy(deep=True)
-    df_copy['mask'] = (
-        (df_copy['gender'] == gender) & 
-        (df_copy['field'] == field) &
-        (df_copy['union'] == union))
+    if gender == 'both':
+        df_copy['mask'] = (
+            (df_copy['field'] == field) &
+            (df_copy['union'] == union))
+    else:
+        df_copy['mask'] = (
+            (df_copy['gender'] == gender) & 
+            (df_copy['field'] == field) &
+            (df_copy['union'] == union))
     df_copy['color'] = np.where(df_copy['mask'] == True, 'blue', 'red')
     return df_copy
 
@@ -96,8 +102,7 @@ def return_df_copy(gender, field, union):
 
 def update_edu_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
-    education_wage = px.density_heatmap(data_frame=df_copy, x='education_yrs', y='wage_per_hour', \
-        title='Education vs Wage per hour', marginal_x='histogram', marginal_y='histogram') 
+    education_wage = px.box(data_frame=df_copy[df_copy['mask'] == True], x='education_yrs', y='wage_per_hour', title='Education vs Wage per hour') 
     return education_wage
 
 @app.callback(
