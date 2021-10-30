@@ -119,11 +119,17 @@ def update_exp_plot(gender, construction, union, manufacturing):
 
 @app.callback(
         Output(component_id='gender_box', component_property='figure'),
-        callback_inputs
+        Input(component_id='construction_dd', component_property='value'),
+        Input(component_id='union_dd', component_property='value'),
+        Input(component_id='manufacturing_dd', component_property='value')
 )
 
-def update_gender_box(gender, construction, union, manufacturing):
-    df_copy = return_df_copy(gender, construction, union, manufacturing)
+def update_gender_box(construction, union, manufacturing):
+    df_copy = df.copy(deep=True)
+    df_copy['mask'] = (
+        (df_copy['construction'] == construction) &
+        (df_copy['union'] == union) &
+        (df_copy['manufacturing'] == manufacturing))
     gender_box = px.box(data_frame=df_copy[df_copy['mask'] == True], x='gender', y='wage_per_hour', title='Gender vs Wage per hour',
             color_discrete_map={'male':'#3295a8','female':'#cf6975'}, color='gender')
 
