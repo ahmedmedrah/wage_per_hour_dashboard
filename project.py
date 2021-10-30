@@ -25,27 +25,30 @@ df['field'] = a
 big_number_style = {'display': 'inline-block', 'padding':'10px 5px 5px 15px', "margin":'0px 100px'}
 
 # Layout HTML/Dash
-app = dash.Dash()
+app = dash.Dash(external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 app.layout = html.Div(children=[
     html.Div(children=[
-        html.H1('Exploring Wage per Hour Dataset', style={'textAlign': 'center', 'background-color':' olivedrab'}),
+        html.H1('Exploring Wage per Hour Dataset',className='container'),
         html.Div(children=[
             html.Div([
                 html.H3('Average Wage/hour'),
-                html.H3('50$')], 
-                style={'background-color':'#b4c3db', 'display':'inline-block', 'margin':'auto'}
+                html.H3(f'{round(df["wage_per_hour"].mean(), 2)} USD')], 
+                style={'display':'inline-block'},
+                className='four.columns'
                 ),
             html.Div([
                 html.H3('Average male wage/hour', style=big_number_style),
-                html.H3('50$', style={'textAlign': 'left'})],  
-                style={'display':'inline-block'}
+                html.H3(f'{round(df[df.gender == "Male"]["wage_per_hour"].mean(), 2)} USD')],  
+                style={'display':'inline-block'},
+                className='four.columns'
                 ),
             html.Div([
                 html.H3('Average female wage/hour', style=big_number_style),
-                html.H3('50$', style={'textAlign': 'left'})], 
-                style={'display':'inline-block'}
+                html.H3(f'{round(df[df.gender == "Female"]["wage_per_hour"].mean(), 2)} USD')], 
+                style={'display':'inline-block'},
+                className='four.columns'
                 )
-            ]),
+            ], style={'background-color':'#b4c3db', 'padding':'25px',},className='twelve.columns'),
         dcc.Dropdown(
             id='gender_dd',
             options=[{'label':'Male', 'value':'Male'}, {'label':'Female', 'value':'Female'}, {'label':'Both', 'value':'Both'}],
@@ -73,7 +76,7 @@ app.layout = html.Div(children=[
         dcc.Graph(id='exp_plot', style={'display':'inline-block'}),
         dcc.Graph(id='gender_box',  style={'display':'inline-block'})
     ])
-])
+],style={'textAlign':'center'})
 
 # Useful placeholders and functions to reduce typing
 callback_inputs =  [
