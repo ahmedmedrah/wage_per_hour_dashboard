@@ -114,7 +114,13 @@ def update_edu_plot(gender, field, union):
 
 def update_age_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
+    newnames = {'blue':'With choices', 'red': 'Without choices'}
     age_wage = px.scatter(data_frame=df_copy, x='age', y='wage_per_hour', title='Age vs Wage per hour', color=df_copy.color.values.tolist())
+    age_wage.for_each_trace(lambda t: t.update(name = newnames[t.name],
+                                      legendgroup = newnames[t.name],
+                                      hovertemplate = t.hovertemplate.replace(t.name, newnames[t.name])
+                                     )
+                  )
     return age_wage
 
 @app.callback(
@@ -124,7 +130,13 @@ def update_age_plot(gender, field, union):
 
 def update_exp_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
+    newnames = {'blue':'With choices', 'red': 'Without choices'}
     exp_wage = px.scatter(data_frame=df_copy, x='experience_yrs', y='wage_per_hour', title='Experience years vs Wage per hour', color=df_copy.color.values.tolist())
+    exp_wage.for_each_trace(lambda t: t.update(name = newnames[t.name],
+                                      legendgroup = newnames[t.name],
+                                      hovertemplate = t.hovertemplate.replace(t.name, newnames[t.name])
+                                     )
+                  )
     return exp_wage
 
 @app.callback(
