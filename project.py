@@ -31,18 +31,18 @@ app.layout = html.Div(children=[
         html.H1('Exploring Wage per Hour Dataset', style={'textAlign': 'center', 'background-color':' olivedrab'}),
         html.Div(children=[
             html.Div([
-                html.H3('Average Wage/hour in USD'),
-                html.H3('50')], 
+                html.H3('Average Wage/hour'),
+                html.H3('50$')], 
                 style={'background-color':'#b4c3db', 'width': '400px', 'textAlign': 'center'}
                 ),
             html.Div([
-                html.H3('Average Wage/hour in USD Males', style=big_number_style),
-                html.H3('50', style={'textAlign': 'left'})],  
+                html.H3('Average male wage/hour', style=big_number_style),
+                html.H3('50$', style={'textAlign': 'left'})],  
                 style={'display':'inline-block'}
                 ),
             html.Div([
-                html.H3('Average Wage/hour in USD Females', style=big_number_style),
-                html.H3('50', style={'textAlign': 'left'})], 
+                html.H3('Average female wage/hour', style=big_number_style),
+                html.H3('50$', style={'textAlign': 'left'})], 
                 style={'display':'inline-block'}
                 )
             ]),
