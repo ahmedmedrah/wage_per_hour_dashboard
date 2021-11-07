@@ -86,7 +86,7 @@ callback_inputs =  [
 
 def return_df_copy(gender, field, union):
     df_copy = df.copy(deep=True)
-    if gender == 'both':
+    if gender == 'Both':
         df_copy['mask'] = (
             (df_copy['field'] == field) &
             (df_copy['union'] == union))
