@@ -23,14 +23,14 @@ for i in df[['manufacturing','construction']].values:
 df['field'] = a
 
 big_number_style = {'display': 'inline-block', 'padding':'10px 5px 5px 15px', "margin":'0px 10px'}
-big_number_div_style = {'display':'inline-block','width':'30%', 'color':'#F3E5F5'} 
+big_number_div_style = {'display':'inline-block','width':'30%', 'color':'#F1F8E9'} 
 graph_style = {'display':'inline-block', 'width':'47%', 'margin':'10px'}
 
 # Layout HTML/Dash
 app = dash.Dash(external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 app.layout = html.Div(children=[
     html.Div(children=[
-        html.H1('Exploring Wage per Hour Dataset',className='container', style={'color':'#FFEA00'}),
+        html.H1('Exploring Wage per Hour Dataset',className='container', style={'color':'#FFEA00', 'padding':'15px'}),
         html.Div(children=[
             html.Div([
                 html.H3('Average Wage/hour', style=big_number_style),
@@ -50,7 +50,7 @@ app.layout = html.Div(children=[
                 style=big_number_div_style,
                 className='four.columns'
                 )
-            ], style={'background-color':'#424242', 'padding':'25px',},className='twelve.columns'),
+            ], style={'background-color':'#455A64', 'padding':'25px',},className='twelve.columns'),
         dcc.Dropdown(
             id='gender_dd',
             options=[{'label':'Male', 'value':'Male'}, {'label':'Female', 'value':'Female'}, {'label':'Both', 'value':'Both'}],
@@ -78,9 +78,11 @@ app.layout = html.Div(children=[
         html.Div(dcc.Graph(id='exp_plot'), style=graph_style),
         html.Div(dcc.Graph(id='gender_box'), style=graph_style)
     ])
-],style={'textAlign':'center', 'background-color':'#666680'})
+],style={'textAlign':'center', 'background-color':'#263238', 'margin':'0px', 'width':'100%'})
 
 # Useful placeholders and functions to reduce typing
+graph_template = 'plotly_dark'
+
 callback_inputs =  [
     Input(component_id='gender_dd', component_property='value'),
     Input(component_id='field_dd', component_property='value'),
@@ -107,7 +109,7 @@ def return_df_copy(gender, field, union):
 
 def update_edu_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
-    education_wage = px.box(data_frame=df_copy[df_copy['mask'] == True], x='education_yrs', y='wage_per_hour', title='Education vs Wage per hour') 
+    education_wage = px.box(data_frame=df_copy[df_copy['mask'] == True], x='education_yrs', y='wage_per_hour', title='Education vs Wage per hour', template=graph_template) 
     return education_wage
 
 @app.callback(
@@ -117,7 +119,7 @@ def update_edu_plot(gender, field, union):
 def update_age_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
     newnames = {'blue':'With choices', 'red': 'Without choices'}
-    age_wage = px.scatter(data_frame=df_copy, x='age', y='wage_per_hour', title='Age vs Wage per hour', color=df_copy.color.values.tolist())
+    age_wage = px.scatter(data_frame=df_copy, x='age', y='wage_per_hour', title='Age vs Wage per hour', color=df_copy.color.values.tolist(), template=graph_template)
     age_wage.for_each_trace(lambda t: t.update(name = newnames[t.name],
                                       legendgroup = newnames[t.name],
                                       hovertemplate = t.hovertemplate.replace(t.name, newnames[t.name])
@@ -133,7 +135,7 @@ def update_age_plot(gender, field, union):
 def update_exp_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
     newnames = {'blue':'With choices', 'red': 'Without choices'}
-    exp_wage = px.scatter(data_frame=df_copy, x='experience_yrs', y='wage_per_hour', title='Experience years vs Wage per hour', color=df_copy.color.values.tolist())
+    exp_wage = px.scatter(data_frame=df_copy, x='experience_yrs', y='wage_per_hour', title='Experience years vs Wage per hour', color=df_copy.color.values.tolist(), template=graph_template)
     exp_wage.for_each_trace(lambda t: t.update(name = newnames[t.name],
                                       legendgroup = newnames[t.name],
                                       hovertemplate = t.hovertemplate.replace(t.name, newnames[t.name])
@@ -153,7 +155,7 @@ def update_gender_box(field, union):
         (df_copy['field'] == field) &
         (df_copy['union'] == union))
     gender_box = px.box(data_frame=df_copy[df_copy['mask'] == True], x='gender', y='wage_per_hour', title='Gender vs Wage per hour',
-            color_discrete_map={'male':'#3295a8','female':'#cf6975'}, color='gender')
+            color_discrete_map={'male':'#3295a8','female':'#cf6975'}, color='gender', template=graph_template)
 
     return  gender_box
 
