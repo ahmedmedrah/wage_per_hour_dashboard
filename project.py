@@ -23,32 +23,34 @@ for i in df[['manufacturing','construction']].values:
 df['field'] = a
 
 big_number_style = {'display': 'inline-block', 'padding':'10px 5px 5px 15px', "margin":'0px 10px'}
+big_number_div_style = {'display':'inline-block','width':'30%', 'color':'#F3E5F5'} 
+graph_style = {'display':'inline-block', 'width':'47%', 'margin':'10px'}
 
 # Layout HTML/Dash
 app = dash.Dash(external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 app.layout = html.Div(children=[
     html.Div(children=[
-        html.H1('Exploring Wage per Hour Dataset',className='container'),
+        html.H1('Exploring Wage per Hour Dataset',className='container', style={'color':'#FFEA00'}),
         html.Div(children=[
             html.Div([
-                html.H3('Average Wage/hour'),
+                html.H3('Average Wage/hour', style=big_number_style),
                 html.H3(f'{round(df["wage_per_hour"].mean(), 2)} USD')], 
-                style={'display':'inline-block','width':'30%'},
+                style=big_number_div_style,
                 className='four.columns'
                 ),
             html.Div([
                 html.H3('Average male wage/hour', style=big_number_style),
                 html.H3(f'{round(df[df.gender == "Male"]["wage_per_hour"].mean(), 2)} USD')],  
-                style={'display':'inline-block','width':'30%'},
+                style=big_number_div_style,
                 className='four.columns'
                 ),
             html.Div([
                 html.H3('Average female wage/hour', style=big_number_style),
                 html.H3(f'{round(df[df.gender == "Female"]["wage_per_hour"].mean(), 2)} USD')], 
-                style={'display':'inline-block','width':'30%'},
+                style=big_number_div_style,
                 className='four.columns'
                 )
-            ], style={'background-color':'#b4c3db', 'padding':'25px',},className='twelve.columns'),
+            ], style={'background-color':'#424242', 'padding':'25px',},className='twelve.columns'),
         dcc.Dropdown(
             id='gender_dd',
             options=[{'label':'Male', 'value':'Male'}, {'label':'Female', 'value':'Female'}, {'label':'Both', 'value':'Both'}],
@@ -69,14 +71,14 @@ app.layout = html.Div(children=[
         )
     ]),    
     html.Div(children=[
-        dcc.Graph(id='education_plot', style={'display':'inline-block'}), 
-        dcc.Graph(id='age_plot', style={'display':'inline-block'})
-    ]), 
+        html.Div(dcc.Graph(id='education_plot'), style=graph_style),
+        html.Div(dcc.Graph(id='age_plot'), style=graph_style)
+    ]),
     html.Div(children=[
-        dcc.Graph(id='exp_plot', style={'display':'inline-block'}),
-        dcc.Graph(id='gender_box',  style={'display':'inline-block'})
+        html.Div(dcc.Graph(id='exp_plot'), style=graph_style),
+        html.Div(dcc.Graph(id='gender_box'), style=graph_style)
     ])
-],style={'textAlign':'center'})
+],style={'textAlign':'center', 'background-color':'#666680'})
 
 # Useful placeholders and functions to reduce typing
 callback_inputs =  [
