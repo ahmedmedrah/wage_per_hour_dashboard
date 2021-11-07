@@ -22,7 +22,7 @@ for i in df[['manufacturing','construction']].values:
         a.append('other')
 df['field'] = a
 
-big_number_style = {'display': 'inline-block', 'padding':'10px 5px 5px 15px', "margin":'0px 100px'}
+big_number_style = {'display': 'inline-block', 'padding':'10px 5px 5px 15px', "margin":'0px 10px'}
 
 # Layout HTML/Dash
 app = dash.Dash(external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
@@ -39,13 +39,13 @@ app.layout = html.Div(children=[
             html.Div([
                 html.H3('Average male wage/hour', style=big_number_style),
                 html.H3(f'{round(df[df.gender == "Male"]["wage_per_hour"].mean(), 2)} USD')],  
-                style={'display':'inline-block'},
+                style={'display':'inline-block','width':'30%'},
                 className='four.columns'
                 ),
             html.Div([
                 html.H3('Average female wage/hour', style=big_number_style),
                 html.H3(f'{round(df[df.gender == "Female"]["wage_per_hour"].mean(), 2)} USD')], 
-                style={'display':'inline-block'},
+                style={'display':'inline-block','width':'30%'},
                 className='four.columns'
                 )
             ], style={'background-color':'#b4c3db', 'padding':'25px',},className='twelve.columns'),
