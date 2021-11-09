@@ -99,7 +99,7 @@ def return_df_copy(gender, field, union):
             (df_copy['gender'] == gender) & 
             (df_copy['field'] == field) &
             (df_copy['union'] == union))
-    df_copy['color'] = np.where(df_copy['mask'] == True, 'blue', 'red')
+    df_copy['color'] = np.where(df_copy['mask'] == True, 'red', 'blue')
     return df_copy
 
 # Callbacks
@@ -118,7 +118,7 @@ def update_edu_plot(gender, field, union):
 
 def update_age_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
-    newnames = {'blue':'With choices', 'red': 'Without choices'}
+    newnames = {'blue':'Without choices', 'red': 'With choices'}
     age_wage = px.scatter(data_frame=df_copy, x='age', y='wage_per_hour', title='Age vs Wage per hour', color=df_copy.color.values.tolist(), template=graph_template)
     age_wage.for_each_trace(lambda t: t.update(name = newnames[t.name],
                                       legendgroup = newnames[t.name],
@@ -134,7 +134,7 @@ def update_age_plot(gender, field, union):
 
 def update_exp_plot(gender, field, union):
     df_copy = return_df_copy(gender, field, union)
-    newnames = {'blue':'With choices', 'red': 'Without choices'}
+    newnames = {'blue':'Without choices', 'red': 'With choices'}
     exp_wage = px.scatter(data_frame=df_copy, x='experience_yrs', y='wage_per_hour', title='Experience years vs Wage per hour', color=df_copy.color.values.tolist(), template=graph_template)
     exp_wage.for_each_trace(lambda t: t.update(name = newnames[t.name],
                                       legendgroup = newnames[t.name],
